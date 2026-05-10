@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP – May's 50th Birthday</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #f0ead8;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .top-line {
+    width: 60px;
+    height: 1px;
+    background: #c9a84c;
+    margin: 0 auto 2rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .header .fifty {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(5rem, 20vw, 8rem);
+    font-weight: 300;
+    line-height: 1;
+    color: #c9a84c;
+    letter-spacing: -2px;
+  }
+
+  .header .subtitle {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #8a7a5a;
+    margin-top: 0.5rem;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    font-weight: 400;
+    letter-spacing: 2px;
+    margin-top: 0.75rem;
+    color: #f0ead8;
+  }
+
+  .details {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.25rem;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8a7a5a;
+  }
+
+  .details span { display: flex; align-items: center; gap: 6px; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #2a2416;
+    margin: 2rem 0;
+  }
+
+  .gold-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 2rem 0;
+  }
+
+  .gold-divider::before, .gold-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #2a2416;
+  }
+
+  .gold-divider span {
+    color: #c9a84c;
+    font-size: 16px;
+  }
+
+  .form-group { margin-bottom: 1.5rem; }
+
+  label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 8px;
+  }
+
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #2a2416;
+    padding: 10px 0;
+    color: #f0ead8;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s;
+    -webkit-appearance: none;
+  }
+
+  input[type="number"] { width: 80px; }
+
+  input[type="text"]:focus, input[type="number"]:focus {
+    border-bottom-color: #c9a84c;
+  }
+
+  input::placeholder { color: #3a3020; }
+
+  .meal-options { display: flex; flex-direction: column; gap: 10px; }
+
+  .meal-opt {
+    border: 1px solid #1e1a10;
+    border-radius: 4px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .meal-opt:hover { border-color: #c9a84c44; background: #111008; }
+  .meal-opt.active { border-color: #c9a84c; background: #1a1608; }
+
+  .meal-opt input { display: none; }
+
+  .dot {
+    width: 16px; height: 16px;
+    border: 1px solid #3a3020;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s;
+  }
+
+  .meal-opt.active .dot { border-color: #c9a84c; }
+
+  .dot::after {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #c9a84c;
+    display: none;
+  }
+
+  .meal-opt.active .dot::after { display: block; }
+
+  .meal-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #f0ead8;
+    margin-bottom: 2px;
+  }
+
+  .meal-desc {
+    font-size: 11px;
+    color: #5a5040;
+    line-height: 1.5;
+  }
+
+  .meal-opt.active .meal-name { color: #c9a84c; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: #c9a84c;
+    border: none;
+    color: #0a0a0a;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: background 0.2s, opacity 0.2s;
+    border-radius: 2px;
+  }
+
+  .submit-btn:hover { background: #e0bc60; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .bottom-line { width: 60px; height: 1px; background: #c9a84c; margin: 2rem auto 0; }
+
+  .theme-note {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #3a3020;
+  }
+
+  /* Success screen */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+
+  .success-screen .check {
+    width: 64px; height: 64px;
+    border: 1px solid #c9a84c;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 24px;
+    color: #c9a84c;
+  }
+
+  .success-screen h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: #c9a84c;
+    margin-bottom: 1rem;
+  }
+
+  .success-screen p {
+    font-size: 13px;
+    color: #5a5040;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+
+  .error-msg {
+    color: #e24b4a;
+    font-size: 12px;
+    margin-top: 1rem;
+    text-align: center;
+    display: none;
+  }
+
+  .loading { opacity: 0.6; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-line"></div>
+
+  <div id="formSection">
+    <div class="header">
+      <div class="fifty">50</div>
+      <div class="subtitle">A celebration of life</div>
+      <h1>May's Birthday</h1>
+      <div class="details">
+        <span>27 June 2026</span>
+        <span>·</span>
+        <span>7:00 PM</span>
+        <span>·</span>
+        <span>Morel Restaurant</span>
+      </div>
+    </div>
+
+    <div class="gold-divider"><span>✦</span></div>
+
+    <div class="form-group">
+      <label for="gname">Your name</label>
+      <input type="text" id="gname" placeholder="Full name" autocomplete="name">
+    </div>
+
+    <div class="form-group">
+      <label for="pax">Number of pax</label>
+      <input type="number" id="pax" value="1" min="1" max="10">
+    </div>
+
+    <div class="form-group" style="margin-top:2rem">
+      <label>Main course</label>
+      <div class="meal-options">
+
+        <div class="meal-opt" onclick="selectMeal(this,'Apple Wood Smoked Pork Belly')">
+          <div class="dot"></div>
+          <div>
+            <div class="meal-name">Apple Wood Smoked Pork Belly</div>
+            <div class="meal-desc">Char Siu Glaze · Fermented Beancurd · Seasonal Vegetables</div>
+          </div>
+        </div>
+
+        <div class="meal-opt" onclick="selectMeal(this,'Charcoal-Grilled Aged Fish (14 Days)')">
+          <div class="dot"></div>
+          <div>
+            <div class="meal-name">Charcoal-Grilled Aged Fish (14 Days)</div>
+            <div class="meal-desc">Tangerine Sauce · Roasted Seasonal Vegetables</div>
+          </div>
+        </div>
+
+        <div class="meal-opt" onclick="selectMeal(this,'Seafood Risotto')">
+          <div class="dot"></div>
+          <div>
+            <div class="meal-name">Seafood Risotto</div>
+            <div class="meal-desc">Light Tomato · Shellfish Broth · Herbs</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitRSVP()">Confirm RSVP</button>
+    <div class="error-msg" id="errorMsg">Something went wrong. Please try again.</div>
+
+    <div class="bottom-line"></div>
+    <div class="theme-note">Theme: Black · Silver · White</div>
+  </div>
+
+  <div class="success-screen" id="successScreen">
+    <div class="check">✓</div>
+    <h2>See you there!</h2>
+    <p>Your RSVP has been received.<br>We look forward to celebrating with you<br>on 27 June 2026.</p>
+    <div class="bottom-line" style="margin-top:2rem"></div>
+  </div>
+</div>
+
+<script>
+  const SHEET_ID = '1xFMX9QR3HmUXE7sVPeNRKZwNxbagDcSVtwaZ0pvLD5Y';
+  let selectedMeal = '';
+
+  function selectMeal(el, meal) {
+    document.querySelectorAll('.meal-opt').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    selectedMeal = meal;
+  }
+
+  async function submitRSVP() {
+    const name = document.getElementById('gname').value.trim();
+    const pax = document.getElementById('pax').value.trim();
+    const errEl = document.getElementById('errorMsg');
+    errEl.style.display = 'none';
+
+    if (!name) { document.getElementById('gname').focus(); return; }
+    if (!selectedMeal) { errEl.textContent = 'Please choose a main course.'; errEl.style.display = 'block'; return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    const now = new Date().toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur' });
+    const row = [name, pax, selectedMeal, now].join('\t');
+
+    try {
+      const formData = new FormData();
+      formData.append('entry.name', name);
+      formData.append('entry.pax', pax);
+      formData.append('entry.meal', selectedMeal);
+      formData.append('entry.time', now);
+
+      const WEBHOOK = 'https://script.google.com/macros/s/AKfycbyoP2KIA7GBEAut_0PwKlj2z36i8GAQJwSO1xU9D399h2PqOOE1wk-ffZSrJ5v3vMSvLA/exec';
+
+      const body = new URLSearchParams({ name, pax, meal: selectedMeal, time: now });
+      await fetch(WEBHOOK, { method: 'POST', body, mode: 'no-cors' });
+
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Confirm RSVP';
+      errEl.textContent = 'Something went wrong. Please try again.';
+      errEl.style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>
