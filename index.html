@@ -122,7 +122,6 @@ input:checked + .slider::before { transform: translateX(20px); background: #c9a8
           </div>
         </div>
       </div>
-
       <div class="form-group" style="margin-top:2rem">
         <label>Bringing children?</label>
         <div class="toggle-row">
@@ -135,10 +134,9 @@ input:checked + .slider::before { transform: translateX(20px); background: #c9a8
         <div class="kids-box" id="kidsBox" style="display:none">
           <label for="kidsCount">Number of children</label>
           <input type="number" id="kidsCount" value="1" min="1" max="10">
-          <p class="kids-note">🧒 Children will be seated together at a kids' table and served pasta. How lovely!</p>
+          <p class="kids-note">🧒 Children will be seated together at a kids' table and served pasta.</p>
         </div>
       </div>
-
       <button class="submit-btn" id="submitBtn" onclick="submitRSVP()">Confirm RSVP</button>
       <div class="error-msg" id="errorMsg"></div>
       <div class="bottom-line"></div>
@@ -243,9 +241,11 @@ function submitRSVP() {
   btn.disabled = true; btn.textContent = 'Submitting...';
   const now = new Date().toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur' });
   const url = WEBHOOK + '?name=' + encodeURIComponent(name) + '&pax=' + encodeURIComponent(pax) + '&meal=' + encodeURIComponent(selectedMeal) + '&kids=' + encodeURIComponent(kidsCount) + '&time=' + encodeURIComponent(now);
-  const iframe = document.createElement('iframe');
-  iframe.style.display = 'none'; iframe.src = url; document.body.appendChild(iframe);
-  setTimeout(() => { document.getElementById('formSection').style.display = 'none'; document.getElementById('successScreen').style.display = 'block'; }, 1500);
+  fetch(url, { method: 'GET', mode: 'no-cors' })
+    .finally(() => {
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    });
 }
 </script>
 </body>
