@@ -50,6 +50,8 @@ input::placeholder { color: #3a3020; }
 .meal-name { font-size: 13px; font-weight: 500; color: #f0ead8; margin-bottom: 2px; }
 .meal-desc { font-size: 11px; color: #5a5040; line-height: 1.5; }
 .meal-opt.active .meal-name { color: #c9a84c; }
+.kids-box { background: #111008; border: 1px solid #2a2416; border-radius: 4px; padding: 16px; margin-top: 10px; }
+.kids-note { font-size: 11px; color: #8a7a5a; line-height: 1.6; margin-top: 10px; font-style: italic; }
 .submit-btn { width: 100%; padding: 16px; background: #c9a84c; border: none; color: #0a0a0a; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; margin-top: 2rem; transition: background 0.2s, opacity 0.2s; border-radius: 2px; }
 .submit-btn:hover { background: #e0bc60; }
 .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -60,6 +62,14 @@ input::placeholder { color: #3a3020; }
 .success-screen h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; color: #c9a84c; margin-bottom: 1rem; }
 .success-screen p { font-size: 13px; color: #5a5040; line-height: 1.8; letter-spacing: 0.5px; }
 .error-msg { color: #e24b4a; font-size: 12px; margin-top: 1rem; text-align: center; display: none; }
+.toggle-row { display: flex; align-items: center; gap: 14px; }
+.toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; background: #2a2416; border-radius: 24px; cursor: pointer; transition: background 0.2s; }
+.slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #5a5040; border-radius: 50%; transition: transform 0.2s, background 0.2s; }
+input:checked + .slider { background: #c9a84c33; }
+input:checked + .slider::before { transform: translateX(20px); background: #c9a84c; }
+.toggle-label { font-size: 13px; color: #f0ead8; }
 </style>
 </head>
 <body>
@@ -112,6 +122,23 @@ input::placeholder { color: #3a3020; }
           </div>
         </div>
       </div>
+
+      <div class="form-group" style="margin-top:2rem">
+        <label>Bringing children?</label>
+        <div class="toggle-row">
+          <label class="toggle">
+            <input type="checkbox" id="kidsToggle" onchange="toggleKids()">
+            <span class="slider"></span>
+          </label>
+          <span class="toggle-label">Yes, I'm bringing kids</span>
+        </div>
+        <div class="kids-box" id="kidsBox" style="display:none">
+          <label for="kidsCount">Number of children</label>
+          <input type="number" id="kidsCount" value="1" min="1" max="10">
+          <p class="kids-note">🧒 Children will be seated together at a kids' table and served pasta. How lovely!</p>
+        </div>
+      </div>
+
       <button class="submit-btn" id="submitBtn" onclick="submitRSVP()">Confirm RSVP</button>
       <div class="error-msg" id="errorMsg"></div>
       <div class="bottom-line"></div>
@@ -190,6 +217,11 @@ function enterSite() {
   }, 800);
 }
 
+function toggleKids() {
+  const box = document.getElementById('kidsBox');
+  box.style.display = document.getElementById('kidsToggle').checked ? 'block' : 'none';
+}
+
 let selectedMeal = '';
 const WEBHOOK = 'https://script.google.com/macros/s/AKfycby4sYTWc5INWkZcwQXzkRlL1bTyju6z-6ltGRlznbbLPxDkJLeWyiBPRGiYbhGjCZfePA/exec';
 
@@ -201,6 +233,8 @@ function selectMeal(el, meal) {
 function submitRSVP() {
   const name = document.getElementById('gname').value.trim();
   const pax = document.getElementById('pax').value.trim();
+  const hasKids = document.getElementById('kidsToggle').checked;
+  const kidsCount = hasKids ? document.getElementById('kidsCount').value : '0';
   const errEl = document.getElementById('errorMsg');
   errEl.style.display = 'none';
   if (!name) { document.getElementById('gname').focus(); return; }
@@ -208,7 +242,7 @@ function submitRSVP() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Submitting...';
   const now = new Date().toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur' });
-  const url = WEBHOOK + '?name=' + encodeURIComponent(name) + '&pax=' + encodeURIComponent(pax) + '&meal=' + encodeURIComponent(selectedMeal) + '&time=' + encodeURIComponent(now);
+  const url = WEBHOOK + '?name=' + encodeURIComponent(name) + '&pax=' + encodeURIComponent(pax) + '&meal=' + encodeURIComponent(selectedMeal) + '&kids=' + encodeURIComponent(kidsCount) + '&time=' + encodeURIComponent(now);
   const iframe = document.createElement('iframe');
   iframe.style.display = 'none'; iframe.src = url; document.body.appendChild(iframe);
   setTimeout(() => { document.getElementById('formSection').style.display = 'none'; document.getElementById('successScreen').style.display = 'block'; }, 1500);
